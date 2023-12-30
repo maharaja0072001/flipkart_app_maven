@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.abc</groupId>
+        <artifactId>com.flipkart</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <artifactId>db-connection</artifactId>
+    <version>${project.parent.version}</version>
+    <dependencies>
+        <dependency>
+            <groupId>org.abc</groupId>
+            <artifactId>exception</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.7.0</version>
+            <scope>system</scope>
+            <systemPath>${pom.basedir}/libs/org/postgresql/postgresql-42.7.0.jar</systemPath>
+        </dependency>
+    </dependencies>
+</project>
