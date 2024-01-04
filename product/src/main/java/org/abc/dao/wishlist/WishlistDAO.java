@@ -4,6 +4,14 @@ import org.abc.authentication.model.User;
 import org.abc.model.product.Product;
 import org.abc.model.wishlist.Wishlist;
 
+/**
+ * <p>
+ * Provides service for the WishlistDAO.
+ * </p>
+ *
+ * @author Maharaja S
+ * @version 1.0
+ */
 public interface WishlistDAO {
 
     /**
@@ -35,5 +43,5 @@ public interface WishlistDAO {
      * @param user Refers the current {@link User}
      * @return the {@link Wishlist} of the user.
      */
-    Wishlist getUserWishlist(final User user);
+    Wishlist getWishlist(final User user);
 }

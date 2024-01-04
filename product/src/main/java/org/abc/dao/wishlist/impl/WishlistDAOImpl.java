@@ -4,6 +4,7 @@ import org.abc.dao.wishlist.WishlistDAO;
 import org.abc.dbconnection.DBConnection;
 import org.abc.ProductCategory;
 import org.abc.authentication.model.User;
+import org.abc.exceptions.ItemAdditionFailedException;
 import org.abc.exceptions.ItemNotFoundException;
 import org.abc.exceptions.ItemRemovalFailedException;
 import org.abc.model.wishlist.Wishlist;
@@ -66,7 +67,7 @@ public class WishlistDAOImpl implements WishlistDAO {
 
             return  updatedRows > 0;
         } catch (final SQLException exception) {
-            return false;
+            throw new ItemAdditionFailedException(exception.getMessage());
         }
     }
 
@@ -99,7 +100,7 @@ public class WishlistDAOImpl implements WishlistDAO {
      * @return the wishlist of the user.
      */
     @Override
-    public Wishlist getUserWishlist(final User user) {
+    public Wishlist getWishlist(final User user) {
         final Wishlist wishlist = new Wishlist();
 
         try (final PreparedStatement preparedStatement = DBConnection.getConnection().prepareStatement("select w.product_id, p.product_category, e.brand,e.model, p.price,c.clothes_type,c.size,c.gender, c.brand ,p.quantity from wishlist w join product p on w.product_id=p.id left join electronics_inventory e on w.product_id = e.product_id left join clothes_inventory c on p.id=c.product_id where w.user_id = ?")) {
@@ -118,7 +119,7 @@ public class WishlistDAOImpl implements WishlistDAO {
                     final Mobile mobile = new Mobile(brand, model, price, quantity);
 
                     mobile.setId(productId);
-                    wishlist.addItemToWishlist(mobile);
+                    wishlist.addItem(mobile);
                 }
 
                 if (ProductCategory.LAPTOP == ProductCategory.valueOf(productType.toUpperCase())) {
@@ -129,7 +130,7 @@ public class WishlistDAOImpl implements WishlistDAO {
                     final Laptop laptop = new Laptop(brand, model, price, quantity);
 
                     laptop.setId(productId);
-                    wishlist.addItemToWishlist(laptop);
+                    wishlist.addItem(laptop);
                 }
 
                 if (ProductCategory.CLOTHES == ProductCategory.valueOf(productType.toUpperCase())) {
@@ -142,7 +143,7 @@ public class WishlistDAOImpl implements WishlistDAO {
                     final Clothes clothes = new Clothes(clothesType, gender, size, price, brand, quantity);
 
                     clothes.setId(productId);
-                    wishlist.addItemToWishlist(clothes);
+                    wishlist.addItem(clothes);
                 }
             }
 

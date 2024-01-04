@@ -145,6 +145,6 @@ public class Validator {
      * @return true if the input grants access to proceed.
      */
     public boolean isPositiveNumber(final String input) {
-        return Pattern.matches("^\\d+$", input);
+        return Pattern.matches("^[1-9]+$", input);
     }
 }

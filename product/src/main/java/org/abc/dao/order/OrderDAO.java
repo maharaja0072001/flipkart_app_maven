@@ -5,6 +5,14 @@ import org.abc.model.order.Order;
 
 import java.util.List;
 
+/**
+ * <p>
+ * Provides service for the OrderDAO.
+ * </p>
+ *
+ * @author Maharaja S
+ * @version 1.0
+ */
 public interface OrderDAO {
 
     /**

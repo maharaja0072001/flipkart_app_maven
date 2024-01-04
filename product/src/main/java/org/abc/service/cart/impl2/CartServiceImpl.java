@@ -73,7 +73,7 @@ public class CartServiceImpl implements CartService {
      * @return the {@link Cart} of the user.
      */
     @Override
-    public Cart getUserCart(final User user) {
-        return CART_DAO.getUserCart(user);
+    public Cart getCart(final User user) {
+        return CART_DAO.getCart(user);
     }
 }

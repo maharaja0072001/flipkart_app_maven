@@ -19,7 +19,6 @@ public class UserServiceImpl implements UserService {
 
     private static UserServiceImpl userService;
     private static final Map<String, User> USERS = new HashMap<>();
-    private static final Validator VALIDATOR = Validator.getInstance();
 
     /**
      * <p>
@@ -71,7 +70,7 @@ public class UserServiceImpl implements UserService {
     public User getUser(final String emailIdOrMobileNumber, final String password) {
         User user = null;
 
-        if (VALIDATOR.isValidEmail(emailIdOrMobileNumber)) {
+        if (Validator.getInstance().isValidEmail(emailIdOrMobileNumber)) {
             for (final User existingUser : USERS.values()) {
                 if (existingUser.getEmailId().equals(emailIdOrMobileNumber)) {
                     user = existingUser;
@@ -81,11 +80,7 @@ public class UserServiceImpl implements UserService {
             user = USERS.get(emailIdOrMobileNumber);
         }
 
-        if (null != user && user.getPassword().equals(password)) {
-            return user;
-        }
-
-        return null;
+        return null != user && (user.getPassword().equals(password)) ? user : null;
     }
 
     /**

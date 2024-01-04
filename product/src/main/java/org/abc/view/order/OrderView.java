@@ -29,7 +29,6 @@ import java.util.Scanner;
 public class OrderView extends View {
 
     private static OrderView orderView;
-    private static final Validator VALIDATOR = Validator.getInstance();
     private static final OrderController ORDER_CONTROLLER = OrderController.getInstance();
     private static final Scanner SCANNER = SingletonScanner.getScanner();
     private static final HomepageView HOME_PAGE_VIEW = HomepageView.getInstance();
@@ -70,6 +69,7 @@ public class OrderView extends View {
             for (int i = 0; i < orders.size(); i++) {
                 LOGGER.info(String.format("%d :[%s]\n", i+1, orders.get(i)));
             }
+            LOGGER.info("Enter the order no to cancel the order.[Press '$' to go back]");
 
             final int index = getChoice();
 
@@ -151,17 +151,13 @@ public class OrderView extends View {
 
         toGoBack(quantity, user);
 
-        try {
-            if (Integer.parseInt(quantity) > product.getQuantity()) {
-                LOGGER.warn(String.format("User id :%d Product id:%d - Enter a valid quantity. Available quantity :%d ", product.getQuantity(), user.getId(), product.getId()));
-                getQuantity(user, product);
-            }
-        } catch (NumberFormatException exception) {
-            LOGGER.warn("Enter a valid quantity");
-            getQuantity(user, product);
-        }
+        if (Validator.getInstance().isPositiveNumber(quantity) && Integer.parseInt(quantity) <= product.getQuantity()) {
+            return Integer.parseInt(quantity);
+        } else {
+            LOGGER.warn(String.format("User id :%d Product id:%d - Enter a valid quantity. Available quantity :%d ", product.getId(), user.getId(), product.getQuantity()));
 
-        return Integer.parseInt(quantity);
+            return getQuantity(user, product);
+        }
     }
 
     /**
@@ -248,7 +244,7 @@ public class OrderView extends View {
      * @param input Refers the input given by the user
      */
     private void toGoBack(final String input, final User user) {
-        if (VALIDATOR.checkToGoBack(input)) {
+        if (Validator.getInstance().checkToGoBack(input)) {
             HOME_PAGE_VIEW.showHomePage(user);
         }
     }

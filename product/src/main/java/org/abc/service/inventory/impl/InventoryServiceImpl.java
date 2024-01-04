@@ -9,7 +9,7 @@ import java.util.List;
 
 /**
  * <p>
- * Provides the service for the Inventory. Responsible for storing all the products.
+ * Provides the service for the Inventory. Stores all the products.
  * </p>
  *
  * @author Maharaja S
@@ -18,9 +18,9 @@ import java.util.List;
 public class InventoryServiceImpl implements InventoryService {
 
     private static InventoryService inventoryService;
-    private static final List<Product> MOBILE_INVENTORY = new ArrayList<>();
-    private static final List<Product> LAPTOP_INVENTORY = new ArrayList<>();
-    private static final List<Product> CLOTHES_INVENTORY = new ArrayList<>();
+    private  final List<Product> MOBILE_INVENTORY = new ArrayList<>();
+    private  final List<Product> LAPTOP_INVENTORY = new ArrayList<>();
+    private  final List<Product> CLOTHES_INVENTORY = new ArrayList<>();
 
     /**
      * <p>
@@ -50,16 +50,16 @@ public class InventoryServiceImpl implements InventoryService {
     @Override
     public void addItem(final List<Product> products) {
         for (final Product product : products) {
-            if (ProductCategory.MOBILE == product.getProductCategory()) {
-                MOBILE_INVENTORY.add(product);
-            }
-
-            if (ProductCategory.LAPTOP == product.getProductCategory()) {
-                LAPTOP_INVENTORY.add(product);
-            }
-
-            if (ProductCategory.CLOTHES == product.getProductCategory()) {
-                CLOTHES_INVENTORY.add(product);
+            switch (product.getProductCategory()) {
+                case MOBILE:
+                    MOBILE_INVENTORY.add(product);
+                    break;
+                case LAPTOP:
+                    LAPTOP_INVENTORY.add(product);
+                    break;
+                case CLOTHES:
+                    CLOTHES_INVENTORY.add(product);
+                    break;
             }
         }
     }
@@ -73,16 +73,16 @@ public class InventoryServiceImpl implements InventoryService {
      */
     @Override
     public void removeItem(final Product product) {
-        if (ProductCategory.MOBILE == product.getProductCategory()) {
-           MOBILE_INVENTORY.remove(product);
-        }
-
-        if (ProductCategory.LAPTOP == product.getProductCategory()) {
-            LAPTOP_INVENTORY.remove(product);
-        }
-
-        if (ProductCategory.LAPTOP == product.getProductCategory()) {
-            CLOTHES_INVENTORY.remove(product);
+        switch (product.getProductCategory()) {
+            case MOBILE:
+                MOBILE_INVENTORY.remove(product);
+                break;
+            case LAPTOP:
+                LAPTOP_INVENTORY.remove(product);
+                break;
+            case CLOTHES:
+                CLOTHES_INVENTORY.remove(product);
+                break;
         }
     }
 

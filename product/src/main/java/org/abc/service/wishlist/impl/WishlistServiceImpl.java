@@ -55,7 +55,7 @@ public class WishlistServiceImpl implements WishlistService {
         }
         final Wishlist wishlist = WISHLISTS.get(user.getId());
 
-        return wishlist.addItemToWishlist(product);
+        return wishlist.addItem(product);
     }
 
     /**
@@ -70,7 +70,7 @@ public class WishlistServiceImpl implements WishlistService {
     public void removeItem(final Product product, final User user) {
         final Wishlist wishlist = WISHLISTS.get(user.getId());
 
-        wishlist.removeItemFromWishlist(product);
+        wishlist.removeItem(product);
     }
 
     /**

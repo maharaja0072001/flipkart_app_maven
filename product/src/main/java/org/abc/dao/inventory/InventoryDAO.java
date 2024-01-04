@@ -5,6 +5,14 @@ import org.abc.model.product.Product;
 
 import java.util.List;
 
+/**
+ * <p>
+ * Provides service for the InventoryDAO.
+ * </p>
+ *
+ * @author Maharaja S
+ * @version 1.0
+ */
 public interface InventoryDAO {
 
     /**

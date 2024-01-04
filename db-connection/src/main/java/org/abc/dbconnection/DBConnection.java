@@ -46,6 +46,9 @@ public class DBConnection {
             try (final FileReader fileReader = new FileReader(String.join("",System.getenv("DB_CONFIG_PATH"), "/db.properties"))) {
                 properties.load(fileReader);
                 connection = DriverManager.getConnection(properties.getProperty("url"), properties.getProperty("username"), properties.getProperty("password"));
+
+                connection.setAutoCommit(false);
+                LOGGER.info("Database is connected");
             } catch (final IOException exception) {
                 LOGGER.error("File not found");
                 throw new FileUnavailableException("File not found");

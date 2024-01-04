@@ -63,7 +63,7 @@ public class FilterMenuView extends View {
         LOGGER.info("Filter By:[Press '$' to go back]\n1.Rate Low to High\n2.Rate High to Low\n3.Price");
         final int choice = getChoice();
 
-        if (0 > choice)  {        //-1 is returned if back key is pressed
+        if (-1 == choice)  {        //-1 is returned if back key is pressed
             HomepageView.getInstance().showHomePage(user);
         }
 
@@ -126,22 +126,11 @@ public class FilterMenuView extends View {
         LOGGER.info("Enter minimum amount:");
         final String minimumAmount = SCANNER.nextLine().trim();
 
-        if (VALIDATOR.checkToGoBack(minimumAmount)) {
-            showFilterMenu(user,products);
-        }
-
-        if (VALIDATOR.isPositiveNumber(minimumAmount)) {
-            filterByRange(user, products);
-        }
+        validateAmount(minimumAmount, user, products);
+        LOGGER.info("Enter maximum amount:");
         final String maximumAmount = SCANNER.nextLine().trim();
 
-        if (VALIDATOR.checkToGoBack(maximumAmount)) {
-            showFilterMenu(user,products);
-        }
-
-        if (VALIDATOR.isPositiveNumber(maximumAmount)) {
-            filterByRange(user, products);
-        }
+        validateAmount(maximumAmount, user, products);
 
         if (Integer.parseInt(minimumAmount) > Integer.parseInt(maximumAmount)) {
             LOGGER.warn("Entered amount is invalid");
@@ -161,7 +150,7 @@ public class FilterMenuView extends View {
 
     /**
      * <p>
-     * Gets the item and add it to cart or whishlist.
+     * Gets the item and add it to cart or wishlist.
      * </p>
      *
      * @param user Refers the current {@link User}.
@@ -190,9 +179,10 @@ public class FilterMenuView extends View {
      * </p>
      *
      * @param product Refers the {@link Product} to be added to cart or wishlist
+     * @param products Refers the collection of {@link Product}
      * @param user Refers the current {@link User}.
      */
-    void addItemToCartOrWishlist(final Product product, final User user, final List<Product> products) {
+    private void addItemToCartOrWishlist(final Product product, final User user, final List<Product> products) {
         LOGGER.info("Enter '1' to add to cart or '2' to add to wishlist. Press '$' to go back");
         final int choice = getChoice();
 
@@ -211,6 +201,26 @@ public class FilterMenuView extends View {
                 LOGGER.warn("Invalid choice");
                 addItemToCartOrWishlist(product, user, products);
                 break;
+        }
+    }
+
+    /**
+     * <p>
+     * Validates the amount entered by the user.
+     * </p>
+     *
+     * @param amount Refers the amount.
+     * @param products Refers the collection of {@link Product}
+     * @param user Refers the current {@link User}.
+     */
+    private void validateAmount(final String amount, final User user, final List<Product> products) {
+        if (VALIDATOR.checkToGoBack(amount)) {
+            showFilterMenu(user,products);
+        }
+
+        if (! VALIDATOR.isPositiveNumber(amount)) {
+            LOGGER.warn("Entered amount is invalid");
+            filterByRange(user, products);
         }
     }
 }

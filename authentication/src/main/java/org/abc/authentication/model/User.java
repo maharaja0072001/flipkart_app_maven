@@ -62,9 +62,8 @@ public class User {
     }
 
     public void addAddress(String address) {
-        if (Objects.isNull(addresses)) {
-            addresses = new ArrayList<>();
-        }
+        addresses = (null == addresses) ? new ArrayList<>() : addresses;
+
         addresses.add(address);
     }
 

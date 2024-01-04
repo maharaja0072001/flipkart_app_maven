@@ -14,7 +14,6 @@ import org.abc.model.product.Mobile;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +30,7 @@ public class InventoryDAOImpl implements InventoryDAO {
     private static InventoryDAOImpl inventoryDAO;
 
     /**
-     *<p>
+     * <p>
      * Default constructor of the InventoryController class. Kept private to restrict from creating object from outside of this class.
      * </p>
      */
@@ -60,11 +59,11 @@ public class InventoryDAOImpl implements InventoryDAO {
         int productId;
 
         for (final Product product : products) {
-            try (final PreparedStatement preparedStatement = DBConnection.getConnection().prepareStatement("insert into product (product_category, price, quantity) values(?,?,?) returning id")) {
-                preparedStatement.setObject(1, product.getProductCategory(), Types.OTHER);
+            try (final PreparedStatement preparedStatement = DBConnection.getConnection().prepareStatement("insert into product (product_category_id, price, quantity) values(?,?,?) returning id")) {
+                preparedStatement.setInt(1, product.getProductCategory().getId());
                 preparedStatement.setFloat(2, product.getPrice());
                 preparedStatement.setFloat(3, product.getQuantity());
-                DBConnection.getConnection().setAutoCommit(false);
+
                 final ResultSet resultSet = preparedStatement.executeQuery();
 
                 resultSet.next();
@@ -86,7 +85,7 @@ public class InventoryDAOImpl implements InventoryDAO {
 
             try (final PreparedStatement preparedStatement = DBConnection.getConnection().prepareStatement(query)) {
                 preparedStatement.setInt(1, productId);
-                preparedStatement.setString(2,product.getBrandName());
+                preparedStatement.setString(2, product.getBrandName());
 
                 switch (product.getProductCategory()) {
                     case MOBILE:
@@ -102,10 +101,10 @@ public class InventoryDAOImpl implements InventoryDAO {
                 }
                 preparedStatement.executeUpdate();
                 DBConnection.getConnection().commit();
-            } catch (SQLException exception) {
+            } catch (final SQLException exception) {
                 try {
                     DBConnection.getConnection().rollback();
-                } catch (SQLException e) {
+                } catch (final SQLException e) {
                     throw new ItemAdditionFailedException(e.getMessage());
                 }
             }

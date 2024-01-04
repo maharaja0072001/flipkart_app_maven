@@ -9,7 +9,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.List;
-import java.util.Scanner;
 
 /**
  * <p>
@@ -21,9 +20,8 @@ import java.util.Scanner;
  */
 public abstract class View {
 
-    private static final Scanner SCANNER = SingletonScanner.getScanner();
-    private static final Validator VALIDATOR = Validator.getInstance();
     private static final Logger LOGGER = LogManager.getLogger(AuthenticationView.class);
+    private static final Validator VALIDATOR = Validator.getInstance();
 
     /**
      * <p>
@@ -32,25 +30,18 @@ public abstract class View {
      * @return the choice
      */
     protected int getChoice() {
-        try {
-            final String choice = SCANNER.nextLine().trim();
+        final String choice = SingletonScanner.getScanner().nextLine().trim();
 
-            if (VALIDATOR.checkToGoBack(choice)) {
-                return -1;
-            }
-
-            if (Integer.parseInt(choice) <= 0) {
-                LOGGER.warn("Invalid choice");
-
-                return getChoice();
-            }
-
-            return Integer.parseInt(choice);
-        } catch (NumberFormatException exception) {
-            LOGGER.warn("Choice is invalid. Enter a valid number");
+        if (VALIDATOR.checkToGoBack(choice)) {
+            return -1;
         }
 
-        return getChoice();
+        if (VALIDATOR.isPositiveNumber(choice)) {
+            return Integer.parseInt(choice);
+        } else {
+            LOGGER.warn("Invalid choice");
+            return getChoice();
+        }
     }
 
     /**

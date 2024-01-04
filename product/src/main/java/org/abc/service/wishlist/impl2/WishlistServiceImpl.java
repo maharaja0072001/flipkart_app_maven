@@ -75,6 +75,6 @@ public class WishlistServiceImpl implements WishlistService {
      */
     @Override
     public Wishlist getWishlist(final User user) {
-        return WISHLIST_DAO.getUserWishlist(user);
+        return WISHLIST_DAO.getWishlist(user);
     }
 }

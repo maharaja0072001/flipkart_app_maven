@@ -4,22 +4,22 @@ import org.abc.exception.CustomException;
 
 /**
  * <p>
- * Represents the exception when item removal action is failed.
+ * Represents the exception when constant not found in enum.
  * </p>
  *
  * @author Maharaja S
  * @version 1.0
  */
-public class ItemRemovalFailedException extends CustomException {
+public class ConstantNotFoundException extends CustomException {
 
     /**
      * <p>
-     * Constructs the ItemRemovalFailedException object.
+     * Constructs the ConstantNotFoundException object.
      * </p>
      *
      * @param message Refers the message to be displayed.
      */
-    public ItemRemovalFailedException(final String message) {
+    public ConstantNotFoundException(final String message) {
         super(message);
     }
 }

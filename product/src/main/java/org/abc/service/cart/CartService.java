@@ -22,7 +22,7 @@ public interface CartService {
      * @param user Refers the current {@link User}
      * @return {@link Cart} of the user.
      */
-    Cart getUserCart(final User user);
+    Cart getCart(final User user);
 
     /**
      * <p>

@@ -7,10 +7,10 @@ import org.abc.model.product.Laptop;
 import org.abc.model.product.Mobile;
 import org.abc.model.product.Product;
 import org.abc.view.cart.CartView;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -92,7 +92,7 @@ public class InventoryManager {
                         break;
                 }
             }
-        } catch (IOException exception) {
+        } catch (final IOException exception) {
             LOGGER.error("Failed Loading properties file or File not found");
             throw new FileUnavailableException(exception.getMessage());
         }
@@ -103,11 +103,11 @@ public class InventoryManager {
      * Creates a Mobiles object from a string of comma separated values.
      * </p>
      *
-     * @param data Refers the string of comma separated values.
+     * @param input Refers the string of comma separated values.
      * @return the instance of {@link Mobile}.
      */
-    private Mobile createMobile(final String data) {
-        final String[] attributes = data.split(",");
+    private Mobile createMobile(final String input) {
+        final String[] attributes = input.split(",");
 
         return new Mobile(attributes[0], attributes[1], Float.parseFloat(attributes[2]), Integer.parseInt(attributes[3]));
     }
@@ -117,11 +117,11 @@ public class InventoryManager {
      * Creates a Laptop object from a string of comma separated values.
      * </p>
      *
-     * @param data Refers the string of comma separated values.
+     * @param input Refers the string of comma separated values.
      * @return the instance of {@link Laptop}.
      */
-    private Laptop createLaptop(final String data) {
-        final String[] attributes = data.split(",");
+    private Laptop createLaptop(final String input) {
+        final String[] attributes = input.split(",");
 
         return new Laptop(attributes[0], attributes[1], Float.parseFloat(attributes[2]), Integer.parseInt(attributes[3]));
     }
@@ -131,11 +131,11 @@ public class InventoryManager {
      * Creates a Clothes object from a string of comma separated values.
      * </p>
      *
-     * @param data Refers the string of comma separated values.
+     * @param input Refers the string of comma separated values.
      * @return the instance of {@link Clothes}.
      */
-    private Clothes createClothes(final String data) {
-        final String[] attributes = data.split(",");
+    private Clothes createClothes(final String input) {
+        final String[] attributes = input.split(",");
 
         return new Clothes(attributes[0], attributes[1], attributes[2], Float.parseFloat(attributes[3]), attributes[4], Integer.parseInt(attributes[5]));
     }

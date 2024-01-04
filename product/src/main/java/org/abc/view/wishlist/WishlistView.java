@@ -6,8 +6,8 @@ import org.abc.model.wishlist.Wishlist;
 import org.abc.model.product.Product;
 import org.abc.view.cart.CartView;
 import org.abc.view.common_view.View;
-
 import org.abc.view.homepage.HomepageView;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -25,6 +25,7 @@ public class WishlistView extends View{
 
     private static WishlistView wishlistView;
     private static final WishlistController WISHLIST_CONTROLLER = WishlistController.getInstance();
+    private static final HomepageView HOMEPAGE_VIEW = HomepageView.getInstance();
     private static final Logger LOGGER = LogManager.getLogger(WishlistView.class);
 
     /**
@@ -44,6 +45,7 @@ public class WishlistView extends View{
     public static WishlistView getInstance() {
         return wishlistView == null ? wishlistView = new WishlistView() : wishlistView;
     }
+
     /**
      * <p>
      * Adds the specific product to the wishlist
@@ -76,7 +78,7 @@ public class WishlistView extends View{
 
         if (null == wishlist || null == wishlist.getItems()) {
             LOGGER.info(String.format("User Id : %d - Wishlist is empty", user.getId()));
-            HomepageView.getInstance().showHomePage(user);
+            HOMEPAGE_VIEW.showHomePage(user);
         } else {
             final List<Product> items = wishlist.getItems();
 
@@ -95,11 +97,14 @@ public class WishlistView extends View{
      * @param items Refers the items in the wishlist.
      */
     private void addToCartOrRemoveItem(final List<Product> items, final User user) {
+        if (items.isEmpty()) {
+            viewWishlist(user);
+        }
         LOGGER.info("Enter the product id to add to cart or to remove from wishlist: [Press '$' to go back] ");
         final int productId = getChoice();
 
         if (-1 == productId) {
-            viewWishlist(user);
+            HOMEPAGE_VIEW.showHomePage(user);
         }
 
         if ((items.size() >= productId)) {

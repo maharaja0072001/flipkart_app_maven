@@ -31,13 +31,16 @@ public class HomepageView extends View implements PageViewer {
 
     private static HomepageView homePageView;
     private static final AuthenticationView AUTHENTICATION_VIEW = AuthenticationView.getInstance();
-    private static final FilterMenuView FILTER_MENU_VIEW = FilterMenuView.getInstance();
     private static final InventoryController INVENTORY_CONTROLLER = InventoryController.getInstance();
     private static final List<Product> MOBILES = INVENTORY_CONTROLLER.getItemsByCategory(ProductCategory.MOBILE);
     private static final List<Product> LAPTOPS = INVENTORY_CONTROLLER.getItemsByCategory(ProductCategory.LAPTOP);
     private static final List<Product> CLOTHES = INVENTORY_CONTROLLER.getItemsByCategory(ProductCategory.CLOTHES);
     private static final Validator VALIDATOR = Validator.getInstance();
     private static final Logger LOGGER = LogManager.getLogger(CartView.class);
+
+    static {
+        InventoryManager.getInstance().addAllItems();
+    }
 
     /**
      * <p>
@@ -65,21 +68,20 @@ public class HomepageView extends View implements PageViewer {
      * @param user Refers the current {@link User}.
      */
     public void showHomePage(final User user) {
-        InventoryManager.getInstance().addAllItems();
         LOGGER.info("1.Mobiles\n2.Laptops\n3.Clothes\n4.Cart\n5.Wishlist\n6.My Orders\n7.Profile\n8.Logout");
 
         switch (getChoice()) {
             case 1:
                 showItems(MOBILES);
-                addToCartOrWishlist(user, MOBILES);
+                toAddItemOrShowFilterMenu(user, MOBILES);
                 break;
             case 2:
                 showItems(LAPTOPS);
-                addToCartOrWishlist(user, LAPTOPS);
+                toAddItemOrShowFilterMenu(user, LAPTOPS);
                 break;
             case 3:
                 showItems(CLOTHES);
-                addToCartOrWishlist(user, CLOTHES);
+                toAddItemOrShowFilterMenu(user, CLOTHES);
                 break;
             case 4:
                 CartView.getInstance().viewCart(user);
@@ -98,9 +100,9 @@ public class HomepageView extends View implements PageViewer {
                 AUTHENTICATION_VIEW.showAuthenticationPage();
                 break;
             default:
-                System.out.println("Enter a valid choice");
-                showHomePage(user);
+                LOGGER.warn("Enter a valid choice");
         }
+        showHomePage(user);
     }
 
     /**
@@ -111,31 +113,22 @@ public class HomepageView extends View implements PageViewer {
      * @param user Refers the current {@link User}.
      * @param products Refers the products in the inventory.
      */
-    private void addToCartOrWishlist(final User user, final List<Product> products) {
-        System.out.println("Enter the product id to add to cart or wishlist or '#' to show filter menu or press '$' to go back");
+    private void toAddItemOrShowFilterMenu(final User user, final List<Product> products) {
+        LOGGER.info("Enter the product id to add to cart or wishlist or '#' to show filter menu or press '$' to go back");
         final String choice = SingletonScanner.getScanner().nextLine().trim();
 
         if (VALIDATOR.checkToGoBack(choice)) {
             showHomePage(user);
-        }
-
-        if (VALIDATOR.toShowFilterMenu(choice)) {
-            FILTER_MENU_VIEW.showFilterMenu(user, products);
         } else {
-            try {
-                final int index = Integer.parseInt(choice);
+            if (VALIDATOR.toShowFilterMenu(choice)) {
+                FilterMenuView.getInstance().showFilterMenu(user, products);
+            } else if (VALIDATOR.isPositiveNumber(choice) && (Integer.parseInt(choice) <= products.size())) {
+                final Product product = products.get(Integer.parseInt(choice) - 1);
 
-                if (index > products.size()) {
-                    System.out.println("Enter a valid product id");
-                    addToCartOrWishlist(user, products);
-                } else {
-                    final Product selectedItem = products.get(index - 1);
-
-                    FILTER_MENU_VIEW.addItemToCartOrWishlist(selectedItem, user, products);
-                }
-            } catch (NumberFormatException e) {
-                System.out.println("Enter a valid product id");
-                addToCartOrWishlist(user, products);
+                addItemToCartOrWishlist(product, user, products);
+            } else {
+                    LOGGER.warn("Enter a valid product id");
+                    toAddItemOrShowFilterMenu(user, products);
             }
         }
     }
@@ -150,5 +143,39 @@ public class HomepageView extends View implements PageViewer {
     @Override
     public void viewPage(Object user) {
         showHomePage((User) user);
+    }
+
+    /**
+     * <p>
+     * Gets the choice from the user to add the product to the cart or wishlist.
+     * </p>
+     *
+     * @param product Refers the {@link Product} to be added to cart or wishlist
+     * @param user Refers the current {@link User}.
+     */
+    private void addItemToCartOrWishlist(final Product product, final User user, final List<Product> products) {
+        LOGGER.info("Enter '1' to add to cart or '2' to add to wishlist. Press '$' to go back");
+        final int choice = getChoice();
+
+        if (-1 == choice) {    // -1 is returned if back key is pressed.
+            showHomePage(user);
+        } else {
+            switch (choice) {
+                case 1:
+                    if (!CartView.getInstance().addItem(product, user)) {
+                        toAddItemOrShowFilterMenu(user, products);
+                    }
+                    break;
+                case 2:
+                    if (!WishlistView.getInstance().addItem(product, user)) {
+                        toAddItemOrShowFilterMenu(user, products);
+                    }
+                    break;
+                default:
+                    LOGGER.warn("Invalid choice");
+                    addItemToCartOrWishlist(product, user, products);
+                    break;
+            }
+        }
     }
 }

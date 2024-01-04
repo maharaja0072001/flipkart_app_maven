@@ -18,7 +18,6 @@ public class UserServiceImpl implements UserService {
 
     private static UserServiceImpl userService;
     private static final UserDAO USER_DAO = UserDAOImpl.getInstance();
-    private static final Validator VALIDATOR = Validator.getInstance();
 
     /**
      * <p>
@@ -62,10 +61,9 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public User getUser(final String emailIdOrMobileNumber, final String password) {
-        return (VALIDATOR.isValidEmail(emailIdOrMobileNumber)
+        return (Validator.getInstance().isValidEmail(emailIdOrMobileNumber)
                 ? USER_DAO.getUser(emailIdOrMobileNumber, password, "select id, name, mobile_number, email, password from users where email=? and password=crypt(?,password)")
                 : USER_DAO.getUser(emailIdOrMobileNumber, password, "select id, name, mobile_number, email, password from users where mobile_number=? and password=crypt(?,password)"));
-
     }
 
     /**

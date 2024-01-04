@@ -83,7 +83,7 @@ public class UserDAOImpl implements UserDAO {
 
         try (final PreparedStatement preparedStatement = DBConnection.getConnection().prepareStatement(query)) {
             preparedStatement.setString(1, emailIdOrMobileNumber);
-            preparedStatement.setString(2,password);
+            preparedStatement.setString(2, password);
             final ResultSet resultSet = preparedStatement.executeQuery();
 
             if (!resultSet.next()) {

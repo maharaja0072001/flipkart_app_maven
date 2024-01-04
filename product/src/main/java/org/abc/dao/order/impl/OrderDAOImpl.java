@@ -17,7 +17,6 @@ import org.abc.model.order.Order;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,17 +64,17 @@ public class OrderDAOImpl implements OrderDAO {
         final int quantity = order.getQuantity();
         final float totalAmount = order.getTotalAmount();
         final String address = order.getAddress();
-        final PaymentMode paymentMode = order.getPaymentMode();
-        final OrderStatus orderStatus = order.getOrderStatus();
+        final int paymentModeId = order.getPaymentMode().getId();
+        final int orderStatusId = order.getOrderStatus().getId();
 
-        try(final PreparedStatement preparedStatement = DBConnection.getConnection().prepareStatement("insert into orders(user_id, product_id, address, payment_mode, quantity, total_amount, order_status) values (?,?,?,?,?,?,?) ")) {
+        try (final PreparedStatement preparedStatement = DBConnection.getConnection().prepareStatement("insert into orders(user_id, product_id, address, payment_mode_id, quantity, total_amount, order_status_id) values (?,?,?,?,?,?,?) ")) {
             preparedStatement.setInt(1, userId);
             preparedStatement.setInt(2, productId);
             preparedStatement.setString(3, address);
-            preparedStatement.setObject(4, paymentMode, Types.OTHER);
+            preparedStatement.setInt(4, paymentModeId);
             preparedStatement.setInt(5, quantity);
             preparedStatement.setFloat(6, totalAmount);
-            preparedStatement.setObject(7,orderStatus, Types.OTHER);
+            preparedStatement.setInt(7, orderStatusId);
             preparedStatement.executeUpdate();
             DBConnection.getConnection().commit();
             updateQuantity(productId, quantity);
@@ -112,9 +111,8 @@ public class OrderDAOImpl implements OrderDAO {
      */
     @Override
     public void cancelOrder(final Order order) {
-        try (final PreparedStatement preparedStatement = DBConnection.getConnection().prepareStatement("update orders set order_status =? where id =?")) {
-
-            preparedStatement.setObject(1, OrderStatus.CANCELLED, Types.OTHER);
+        try (final PreparedStatement preparedStatement = DBConnection.getConnection().prepareStatement("update orders set order_status_id =? where id =?")) {
+            preparedStatement.setInt(1, OrderStatus.CANCELLED.getId());
             preparedStatement.setInt(2, order.getId());
             preparedStatement.executeUpdate();
             DBConnection.getConnection().commit();
@@ -136,7 +134,7 @@ public class OrderDAOImpl implements OrderDAO {
     public List<Order> getOrders(final int userId) {
         final List<Order> orders = new ArrayList<>();
 
-        try (final PreparedStatement preparedStatement = DBConnection.getConnection().prepareStatement("select o.id,o.product_id, o.payment_mode,o.quantity,o.total_amount, o.address,o.order_status, p.product_category, e.brand,e.model, p.price,c.clothes_type,c.size,c.gender, c.brand from orders o join product p on o.product_id=p.id  left join electronics_inventory e on o.product_id = e.product_id left join clothes_inventory c on o.product_id=c.product_id where o.user_id = ?")) {
+        try (final PreparedStatement preparedStatement = DBConnection.getConnection().prepareStatement("select o.id,o.product_id, o.payment_mode_id,o.quantity,o.total_amount, o.address,o.order_status_id, p.product_category_id, e.brand,e.model, p.price,c.clothes_type,c.size,c.gender, c.brand from orders o join product p on o.product_id=p.id  left join electronics_inventory e on o.product_id = e.product_id left join clothes_inventory c on o.product_id=c.product_id where o.user_id = ?")) {
             preparedStatement.setInt(1, userId);
             final ResultSet resultSet = preparedStatement.executeQuery();
 
@@ -148,23 +146,23 @@ public class OrderDAOImpl implements OrderDAO {
                 final int quantity = resultSet.getInt(4);
                 final float totalAmount = resultSet.getFloat(5);
                 final String address = resultSet.getString(6);
-                final OrderStatus orderStatus = OrderStatus.valueOf(resultSet.getString(7));
-                final String productCategory = resultSet.getString(8);
+                final OrderStatus orderStatus = OrderStatus.valueOf(resultSet.getInt(7));
+                final ProductCategory productCategory = ProductCategory.valueOf(resultSet.getInt(8));
 
-                if (ProductCategory.MOBILE == ProductCategory.valueOf(productCategory.toUpperCase()) || ProductCategory.LAPTOP == ProductCategory.valueOf(productCategory.toUpperCase())) {
+                if (ProductCategory.MOBILE == productCategory || ProductCategory.LAPTOP == productCategory) {
                     final String brand = resultSet.getString(9);
                     final String model = resultSet.getString(10);
                     final float price = resultSet.getFloat(11);
-                    productName = String.format("Product name : %s %s - Rs :%.2f", brand,model,price);
+                    productName = String.format("Product name : %s %s - Rs :%.2f", brand, model, price);
                 }
 
-                if (ProductCategory.CLOTHES == ProductCategory.valueOf(productCategory.toUpperCase())) {
+                if (ProductCategory.CLOTHES == productCategory) {
                     final float price = resultSet.getFloat(11);
                     final String clothesType = resultSet.getString(12);
                     final String size = resultSet.getString(13);
                     final String gender = resultSet.getString(14);
                     final String brand = resultSet.getString(15);
-                    productName = String.format("%s brand :%s size : %s gender: %s - Rs :%.2f ",clothesType,brand,size,gender,price);
+                    productName = String.format("%s brand :%s size : %s gender: %s - Rs :%.2f ", clothesType, brand, size, gender, price);
                 }
                 final Order order = new Order.OrderBuilder(userId, productId, paymentMode).setId(orderId).setProductName(productName).setTotalAmount(totalAmount).setQuantity(quantity).setAddress(address).setOrderStatus(orderStatus).buildOrder();
 
@@ -189,7 +187,7 @@ public class OrderDAOImpl implements OrderDAO {
     public List<String> getAllAddresses(final User user) {
         final List<String> addresses = new ArrayList<>();
 
-        try(final PreparedStatement preparedStatement = DBConnection.getConnection().prepareStatement("select address from address join users on users.id=address.user_id where user_id =?")) {
+        try (final PreparedStatement preparedStatement = DBConnection.getConnection().prepareStatement("select address from address join users on users.id=address.user_id where user_id =?")) {
             preparedStatement.setInt(1, user.getId());
             final ResultSet resultSet = preparedStatement.executeQuery();
 
@@ -214,7 +212,7 @@ public class OrderDAOImpl implements OrderDAO {
      */
     @Override
     public void addAddress(final User user, final String address) {
-        try(final PreparedStatement preparedStatement = DBConnection.getConnection().prepareStatement("insert into address(user_id, address) values (?,?)")) {
+        try (final PreparedStatement preparedStatement = DBConnection.getConnection().prepareStatement("insert into address(user_id, address) values (?,?)")) {
             preparedStatement.setInt(1, user.getId());
             preparedStatement.setString(2, address);
             preparedStatement.executeUpdate();

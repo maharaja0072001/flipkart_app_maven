@@ -69,8 +69,8 @@ public class CartController {
      * @param user Refers the user who owns the cart.
      * @return the cart of the user.
      */
-    public Cart getUserCart(final User user) {
-        return CART_SERVICE.getUserCart(user);
+    public Cart getCart(final User user) {
+        return CART_SERVICE.getCart(user);
     }
 }
 

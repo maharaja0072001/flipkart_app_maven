@@ -57,6 +57,7 @@ public class OrderServiceImpl implements OrderService {
             existingOrders.add(order);
         } else {
             final List<Order> newOrders = new ArrayList<>();
+
             ORDERS.put(userId, newOrders);
             newOrders.add(order);
         }

@@ -65,8 +65,8 @@ public class AuthenticationView {
                exit();
             default:
                LOGGER.warn("Enter a valid choice");
+               showAuthenticationPage();
         }
-        showAuthenticationPage();
     }
 
     /**
@@ -149,7 +149,8 @@ public class AuthenticationView {
             LOGGER.info("Login successful");
             homePageView.viewPage(user);
         } else {
-            LOGGER.warn("Wrong credentials or user doesn't exist");
+            LOGGER.warn("Wrong credentials or user doesn't exist.");
+            login();
         }
     }
 
@@ -319,7 +320,7 @@ public class AuthenticationView {
 
             return Integer.parseInt(choice);
         } catch (final NumberFormatException exception) {
-            LOGGER.warn("Invalid choice. Enter a valid number");
+            LOGGER.warn("Enter a valid choice");
         }
 
         return getChoice();

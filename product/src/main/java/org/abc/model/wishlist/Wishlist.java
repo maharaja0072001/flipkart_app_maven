@@ -25,10 +25,8 @@ public class Wishlist {
      * @param product Refers {@link Product} to be added to the wishlist.
      * @return true if the product is added.
      */
-    public boolean addItemToWishlist(final Product product) {
-        if (null == wishlistItems) {
-            wishlistItems =  new LinkedList<>();
-        }
+    public boolean addItem(final Product product) {
+        wishlistItems = (null == wishlistItems) ? new LinkedList<>() : wishlistItems;
 
         return wishlistItems.add(product);
     }
@@ -40,7 +38,7 @@ public class Wishlist {
      *
      * @param product Refers {@link Product} the product to be removed.
      */
-    public void removeItemFromWishlist(final Product product) {
+    public void removeItem(final Product product) {
         wishlistItems.remove(product);
     }
 
@@ -54,5 +52,4 @@ public class Wishlist {
     public List<Product> getItems() {
         return wishlistItems;
     }
-
 }

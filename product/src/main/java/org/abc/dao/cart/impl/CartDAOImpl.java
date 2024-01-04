@@ -2,6 +2,7 @@ package org.abc.dao.cart.impl;
 
 import org.abc.dao.cart.CartDAO;
 import org.abc.dbconnection.DBConnection;
+import org.abc.exceptions.ItemAdditionFailedException;
 import org.abc.exceptions.ItemRemovalFailedException;
 import org.abc.exceptions.ItemNotFoundException;
 import org.abc.model.cart.Cart;
@@ -66,7 +67,7 @@ public class CartDAOImpl implements CartDAO {
 
             return  updatedRows > 0;
         } catch (final SQLException exception) {
-            return false;
+            throw new ItemAdditionFailedException(exception.getMessage());
         }
     }
 
@@ -100,7 +101,7 @@ public class CartDAOImpl implements CartDAO {
      * @return {@link Cart} of the user.
      */
     @Override
-    public Cart getUserCart(final User user) {
+    public Cart getCart(final User user) {
         final Cart cart = new Cart();
 
         try (final PreparedStatement preparedStatement = DBConnection.getConnection().prepareStatement("select cart.product_id, p.product_category, e.brand,e.model, p.price,c.clothes_type,c.size,c.gender, c.brand, p.quantity from cart join product p on cart.product_id=p.id  left join electronics_inventory e on cart.product_id = e.product_id left join clothes_inventory c on p.id=c.product_id where cart.user_id = ?")) {
@@ -119,7 +120,7 @@ public class CartDAOImpl implements CartDAO {
                     final Mobile mobile = new Mobile(brand, model, price, quantity);
 
                     mobile.setId(productId);
-                    cart.addToCart(mobile);
+                    cart.addItem(mobile);
                 }
 
                 if (ProductCategory.LAPTOP == ProductCategory.valueOf(productType.toUpperCase())) {
@@ -130,7 +131,7 @@ public class CartDAOImpl implements CartDAO {
                     final Laptop laptop = new Laptop(brand, model, price, quantity);
 
                     laptop.setId(productId);
-                    cart.addToCart(laptop);
+                    cart.addItem(laptop);
                 }
 
                 if (ProductCategory.CLOTHES == ProductCategory.valueOf(productType.toUpperCase())) {
@@ -143,13 +144,13 @@ public class CartDAOImpl implements CartDAO {
                     final Clothes clothes = new Clothes(clothesType, gender, size, price, brand, quantity);
 
                     clothes.setId(productId);
-                    cart.addToCart(clothes);
+                    cart.addItem(clothes);
                 }
             }
-
-            return cart;
         } catch (final SQLException exception) {
             throw new ItemNotFoundException(exception.getMessage());
         }
+
+        return cart;
     }
 }

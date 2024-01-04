@@ -8,7 +8,7 @@ package org.abc.exception;
  * @author Maharaja S
  * @version 1.0
  */
-public class CustomException extends RuntimeException{
+public class CustomException extends RuntimeException {
 
     /**
      * <p>

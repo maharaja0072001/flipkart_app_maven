@@ -54,7 +54,7 @@ public class CartServiceImpl implements CartService {
         }
         final Cart cart = CARTS.get(user.getId());
 
-        return cart.addToCart(product);
+        return cart.addItem(product);
     }
 
     /**
@@ -69,7 +69,7 @@ public class CartServiceImpl implements CartService {
     public void removeItem(final Product product, final User user) {
         final Cart cart = CARTS.get(user.getId());
 
-        cart.removeFromCart(product);
+        cart.removeItem(product);
     }
 
     /**
@@ -81,7 +81,7 @@ public class CartServiceImpl implements CartService {
      * @return the {@link Cart} of the user.
      */
     @Override
-    public Cart getUserCart(final User user) {
+    public Cart getCart(final User user) {
         return CARTS.get(user.getId());
     }
 }

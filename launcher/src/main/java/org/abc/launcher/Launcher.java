@@ -20,7 +20,7 @@ public class Launcher {
 
     /**
      * <p>
-     * The main entry to the flipkart application.
+     * Main entry to the flipkart application.
      * </p>
      *
      * @param arguments Refers command line arguments to flipkart application

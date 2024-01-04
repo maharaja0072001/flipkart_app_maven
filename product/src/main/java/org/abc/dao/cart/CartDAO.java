@@ -4,6 +4,14 @@ import org.abc.authentication.model.User;
 import org.abc.model.cart.Cart;
 import org.abc.model.product.Product;
 
+/**
+ * <p>
+ * Provides service for the CartDAO.
+ * </p>
+ *
+ * @author Maharaja S
+ * @version 1.0
+ */
 public interface CartDAO {
 
     /**
@@ -14,7 +22,7 @@ public interface CartDAO {
      * @param user Refers the current {@link User}
      * @return {@link Cart} of the user.
      */
-    Cart getUserCart(final User user);
+    Cart getCart(final User user);
 
     /**
      * <p>

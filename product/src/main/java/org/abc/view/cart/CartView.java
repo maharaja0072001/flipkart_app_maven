@@ -61,12 +61,11 @@ public class CartView extends View {
         }
 
         if (CART_CONTROLLER.addItem(product, user)) {
-            LOGGER.info(String.format("User id :%d Product Id :%d -Item added to the cart", user.getId(), product.getId()));
+            LOGGER.info(String.format("User id :%d Product Id :%d - Item added to the cart", user.getId(), product.getId()));
 
             return true;
-        } else {
-            LOGGER.info(String.format("User id :%d Product Id :%d -Item is already in the cart", user.getId(), product.getId()));
         }
+        LOGGER.info(String.format("User id :%d Product Id :%d - Item is already in the cart", user.getId(), product.getId()));
 
         return false;
     }
@@ -79,13 +78,13 @@ public class CartView extends View {
      * @param user Refers the current {@link User}
      */
     public void viewCart(final User user) {
-        final Cart cart = CART_CONTROLLER.getUserCart(user);
+        final Cart cart = CART_CONTROLLER.getCart(user);
 
-        if (null == cart || null == cart.getCartItems()) {
+        if (null == cart || null == cart.getItems()) {
             LOGGER.info(String.format("User id :%d-Cart is empty", user.getId()));
             HomepageView.getInstance().showHomePage(user);
         } else {
-            final List<Product> cartItems = cart.getCartItems();
+            final List<Product> cartItems = cart.getItems();
 
             LOGGER.info("Cart :");
             showItems(cartItems);
@@ -103,11 +102,14 @@ public class CartView extends View {
      * @param items Refers the items in the cart.
      */
     private void placeOrderOrRemoveItem(final List<Product> items, final User user) {
+        if (items.isEmpty()) {
+            viewCart(user);
+        }
         LOGGER.info("Enter the product id to order the item or to remove from cart: [Press '$' to go back] ");
         final int productId = getChoice();
 
         if (-1 == productId) {
-            viewCart(user);
+            HomepageView.getInstance().viewPage(user);
         }
 
         if ((items.size() >= productId)) {

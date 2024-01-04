@@ -18,10 +18,16 @@ public class Cart {
     private List<Product> cartItems;
     private float totalAmountInCart;
 
-    public boolean addToCart(final Product product) {
-        if (null == cartItems) {
-            cartItems = new LinkedList<>();
-        }
+    /**
+     * <p>
+     * Adds the specific product to the cart
+     * </p>
+     *
+     * @param product Refers {@link Product} to be added to the cart.
+     * @return true if the product is added.
+     */
+    public boolean addItem(final Product product) {
+        cartItems = (null == cartItems) ? new LinkedList<>() : cartItems;
 
         if (!cartItems.contains(product)) {
             totalAmountInCart += product.getPrice();
@@ -32,15 +38,36 @@ public class Cart {
         return false;
     }
 
-    public void removeFromCart(final Product item) {
-        cartItems.remove(item);
-        totalAmountInCart -= item.getPrice();
+    /**
+     * <p>
+     * Removes the specific product from the cart
+     * </p>
+     *
+     * @param product Refers {@link Product} the product to be removed.
+     */
+    public void removeItem(final Product product) {
+        cartItems.remove(product);
+        totalAmountInCart -= product.getPrice();
     }
 
-    public List<Product> getCartItems() {
+    /**
+     * <p>
+     * Gets the products in the cart and returns it.
+     * </p>
+     *
+     * @return all the {@link Product} in the cart.
+     */
+    public List<Product> getItems() {
         return cartItems;
     }
 
+    /**
+     * <p>
+     * Gets the total amount in the cart
+     * </p>
+     *
+     * @return the total amount.
+     */
     public float getTotalAmount() {
         return totalAmountInCart;
     }
