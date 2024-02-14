@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Objects;
 import java.util.Properties;
 
 import org.apache.logging.log4j.Logger;
@@ -40,7 +41,7 @@ public class DBConnection {
      * @return {@link Connection} of the database.
      */
     public static Connection getConnection() throws SQLException {
-        if (null == connection) {
+        if (Objects.isNull(connection)) {
             final Properties properties = new Properties();
 
             try (final FileReader fileReader = new FileReader(String.join("",System.getenv("DB_CONFIG_PATH"), "/db.properties"))) {

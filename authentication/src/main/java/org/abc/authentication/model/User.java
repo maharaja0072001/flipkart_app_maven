@@ -62,7 +62,7 @@ public class User {
     }
 
     public void addAddress(String address) {
-        addresses = (null == addresses) ? new ArrayList<>() : addresses;
+        addresses = Objects.isNull(address) ? new ArrayList<>() : addresses;
 
         addresses.add(address);
     }
@@ -73,7 +73,7 @@ public class User {
 
     @Override
     public boolean equals(final Object object) {
-        if (null == object || getClass() != object.getClass()) {
+        if (Objects.isNull(object) || getClass() != object.getClass()) {
             return false;
         }
 

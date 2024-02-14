@@ -12,6 +12,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * <p>
@@ -42,7 +43,7 @@ public class CartView extends View {
      * @return the single instance of CartView class.
      */
     public static CartView getInstance() {
-        return cartView == null ? cartView = new CartView() : cartView;
+        return Objects.isNull(cartView) ? cartView = new CartView() : cartView;
     }
 
     /**
@@ -80,7 +81,7 @@ public class CartView extends View {
     public void viewCart(final User user) {
         final Cart cart = CART_CONTROLLER.getCart(user);
 
-        if (null == cart || null == cart.getItems()) {
+        if (Objects.isNull(cart) || Objects.isNull(cart.getItems())) {
             LOGGER.info(String.format("User id :%d-Cart is empty", user.getId()));
             HomepageView.getInstance().showHomePage(user);
         } else {
@@ -123,23 +124,23 @@ public class CartView extends View {
             }
 
             switch (choice) {
-                case 1:
+                case 1 -> {
                     if ((0 < item.getQuantity())) {
                         OrderView.getInstance().placeOrder(item, user);
                     } else {
                         LOGGER.warn(String.format("User id :%d Product Id :%d -The item is out of stock", user.getId(), item.getId()));
                         placeOrderOrRemoveItem(items, user);
                     }
-                    break;
-                case 2:
+                }
+                case 2 -> {
                     CART_CONTROLLER.removeItem(item, user);
                     LOGGER.info(String.format("User id :%d Product Id :%d -Item removed from the cart", user.getId(), item.getId()));
                     placeOrderOrRemoveItem(items, user);
-                    break;
-                default:
+                }
+                default -> {
                     LOGGER.warn("Invalid choice");
                     placeOrderOrRemoveItem(items, user);
-                    break;
+                }
             }
         } else {
             LOGGER.warn("Invalid product id");

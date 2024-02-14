@@ -15,6 +15,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Properties;
 
 /**
@@ -45,7 +46,7 @@ public class InventoryManager {
      * @return the single instance of InventoryManager class.
      */
     public static InventoryManager getInstance() {
-        return inventoryManager == null ? inventoryManager = new InventoryManager() : inventoryManager;
+        return Objects.isNull(inventoryManager) ? inventoryManager = new InventoryManager() : inventoryManager;
     }
 
     /**
@@ -68,7 +69,7 @@ public class InventoryManager {
      * </p>
      *
      * @param allProducts Refers the collection of product.
-     * @param filePath Refers the file path of properties file.
+     * @param filePath Refers the file path of properties files.
      * @param productCategory Refers the product category.
      */
     private void loadProducts(final List<Product> allProducts, final String filePath, final ProductCategory productCategory) {
@@ -81,15 +82,9 @@ public class InventoryManager {
                 final String value = properties.getProperty((String) key);
 
                 switch (productCategory) {
-                    case MOBILE:
-                        allProducts.add(createMobile(value));
-                        break;
-                    case LAPTOP:
-                        allProducts.add(createLaptop(value));
-                        break;
-                    case CLOTHES:
-                        allProducts.add(createClothes(value));
-                        break;
+                    case MOBILE -> allProducts.add(createMobile(value));
+                    case LAPTOP -> allProducts.add(createLaptop(value));
+                    case CLOTHES -> allProducts.add(createClothes(value));
                 }
             }
         } catch (final IOException exception) {

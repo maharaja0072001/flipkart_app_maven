@@ -12,6 +12,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * <p>
@@ -43,7 +44,7 @@ public class WishlistView extends View{
      * @return the single instance of WishlistView class.
      */
     public static WishlistView getInstance() {
-        return wishlistView == null ? wishlistView = new WishlistView() : wishlistView;
+        return Objects.isNull(wishlistView) ? wishlistView = new WishlistView() : wishlistView;
     }
 
     /**
@@ -76,7 +77,7 @@ public class WishlistView extends View{
     public void viewWishlist(final User user) {
         final Wishlist wishlist = WISHLIST_CONTROLLER.getWishlist(user);
 
-        if (null == wishlist || null == wishlist.getItems()) {
+        if (Objects.isNull(wishlist) || Objects.isNull(wishlist.getItems())) {
             LOGGER.info(String.format("User Id : %d - Wishlist is empty", user.getId()));
             HOMEPAGE_VIEW.showHomePage(user);
         } else {
@@ -118,20 +119,20 @@ public class WishlistView extends View{
             }
 
             switch (choice) {
-                case 1:
+                case 1 -> {
                     if (!CartView.getInstance().addItem(item, user)) {
                         addToCartOrRemoveItem(items, user);
                     }
-                    break;
-                case 2:
+                }
+                case 2 -> {
                     WISHLIST_CONTROLLER.removeItem(item, user);
                     LOGGER.info(String.format("User Id : %d Product Id : %d - Item removed from wishlist", user.getId(), item.getId()));
                     addToCartOrRemoveItem(items, user);
-                    break;
-                default:
+                }
+                default -> {
                     LOGGER.warn("Invalid choice");
                     addToCartOrRemoveItem(items, user);
-                    break;
+                }
             }
         } else {
             LOGGER.warn("Invalid product id");

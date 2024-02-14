@@ -4,6 +4,7 @@ import org.abc.model.product.Product;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * <p>
@@ -26,7 +27,7 @@ public class Wishlist {
      * @return true if the product is added.
      */
     public boolean addItem(final Product product) {
-        wishlistItems = (null == wishlistItems) ? new LinkedList<>() : wishlistItems;
+        wishlistItems = Objects.isNull(wishlistItems) ? new LinkedList<>() : wishlistItems;
 
         return wishlistItems.add(product);
     }

@@ -7,6 +7,7 @@ import org.abc.service.wishlist.WishlistService;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * <p>
@@ -36,7 +37,7 @@ public class WishlistServiceImpl implements WishlistService {
      * @return returns the single instance of WishlistServiceImpl Class.
      */
     public static WishlistService getInstance() {
-        return wishlistService == null ? wishlistService = new WishlistServiceImpl() : wishlistService;
+        return Objects.isNull(wishlistService) ? wishlistService = new WishlistServiceImpl() : wishlistService;
     }
 
     /**

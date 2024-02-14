@@ -5,10 +5,7 @@ import org.abc.authentication.model.User;
 import org.abc.model.order.Order;
 import org.abc.service.order.OrderService;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * <p>
@@ -38,7 +35,7 @@ public class OrderServiceImpl implements OrderService {
      * @return returns the single instance of OrderServiceImpl Class.
      */
     public static OrderService getInstance() {
-        return orderService == null ? orderService = new OrderServiceImpl() : orderService;
+        return Objects.isNull(orderService) ? orderService = new OrderServiceImpl() : orderService;
     }
 
     /**

@@ -49,7 +49,7 @@ public class OrderView extends View {
      * @return the single instance of OrderView class.
      */
     public static OrderView getInstance() {
-        return orderView == null ? orderView = new OrderView() : orderView;
+        return Objects.isNull(orderView) ? orderView = new OrderView() : orderView;
     }
 
     /**
@@ -62,7 +62,7 @@ public class OrderView extends View {
     public void viewAndCancelOrder(final User user) {
         final List<Order> orders = ORDER_CONTROLLER.getOrders(user.getId());
 
-        if (null == orders || orders.isEmpty()) {
+        if (Objects.isNull(orders) || orders.isEmpty()) {
             LOGGER.info(String.format("User id :%d - No orders found", user.getId()));
             HOME_PAGE_VIEW.showHomePage(user);
         } else {
@@ -121,17 +121,19 @@ public class OrderView extends View {
         toGoBack(choice, user);
 
         switch (choice) {
-            case 1:
+            case 1 -> {
                 return PaymentMode.CASH_ON_DELIVERY;
-            case 2:
+            }
+            case 2 -> {
                 return PaymentMode.CREDIT_OR_DEBIT_CARD;
-            case 3:
+            }
+            case 3 -> {
                 return PaymentMode.NET_BANKING;
-            case 4:
+            }
+            case 4 -> {
                 return PaymentMode.UPI;
-            default:
-                LOGGER.warn("Enter a valid choice");
-                break;
+            }
+            default -> LOGGER.warn("Enter a valid choice");
         }
         return getPaymentMode(user);
     }
@@ -186,23 +188,20 @@ public class OrderView extends View {
         toGoBack(choice, user);
 
         switch (choice) {
-            case 1:
+            case 1 -> {
                 LOGGER.info("Enter the index:");
                 final String index = SCANNER.nextLine().trim();
-
                 toGoBack(index, user);
-
                 return ORDER_CONTROLLER.getAllAddresses(user).get(Integer.parseInt(index));
-            case 2:
+            }
+            case 2 -> {
                 LOGGER.info("Enter a new address:");
                 final String newAddress = SCANNER.nextLine().trim();
-
                 toGoBack(newAddress, user);
                 ORDER_CONTROLLER.addAddress(user, newAddress);
-
                 return newAddress;
-            default :
-                LOGGER.warn("Enter a valid choice");
+            }
+            default -> LOGGER.warn("Enter a valid choice");
         }
 
         return getAddress(addresses, user);

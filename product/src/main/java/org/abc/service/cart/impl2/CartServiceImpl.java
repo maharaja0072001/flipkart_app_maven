@@ -7,6 +7,8 @@ import org.abc.authentication.model.User;
 import org.abc.model.product.Product;
 import org.abc.service.cart.CartService;
 
+import java.util.Objects;
+
 /**
  * <p>
  * Provides the service for the Cart of the user.
@@ -35,7 +37,7 @@ public class CartServiceImpl implements CartService {
      * @return returns the single instance of CartServiceImpl Class.
      */
     public static CartService getInstance() {
-        return cartService == null ? cartService = new CartServiceImpl() : cartService;
+        return Objects.isNull(cartService) ? cartService = new CartServiceImpl() : cartService;
     }
 
     /**

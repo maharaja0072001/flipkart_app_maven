@@ -4,6 +4,8 @@ import org.abc.authentication.model.User;
 import org.abc.authentication.service.UserService;
 import org.abc.authentication.service.impl2.UserServiceImpl;
 
+import java.util.Objects;
+
 /**
  * <p>
  * Interacts between UserView and UserService for creating new user and getting existing user for login.
@@ -32,7 +34,7 @@ public class UserController {
      * @return the single instance of UserController class.
      */
     public static UserController getInstance() {
-        return userController == null ? userController = new UserController() : userController;
+        return Objects.isNull(userController) ? userController = new UserController() : userController;
     }
 
     /**

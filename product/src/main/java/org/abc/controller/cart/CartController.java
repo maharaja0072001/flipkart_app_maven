@@ -6,6 +6,8 @@ import org.abc.service.cart.impl2.CartServiceImpl;
 import org.abc.authentication.model.User;
 import org.abc.model.product.Product;
 
+import java.util.Objects;
+
 /**
  * <p>
  * Interacts between CartView and CartService for adding , removing from the cart of the user.
@@ -34,7 +36,7 @@ public class CartController {
      * @return returns the single instance of CartController Class.
      */
     public static CartController getInstance() {
-        return cartController == null ? cartController = new CartController() : cartController;
+        return Objects.isNull(cartController) ? cartController = new CartController() : cartController;
     }
 
     /**

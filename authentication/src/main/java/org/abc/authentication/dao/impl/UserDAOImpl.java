@@ -9,6 +9,7 @@ import org.abc.dbconnection.DBConnection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Objects;
 
 /**
  * <p>
@@ -37,7 +38,7 @@ public class UserDAOImpl implements UserDAO {
      * @return returns the single instance of UserDAOImpl class.
      */
     public static UserDAOImpl getInstance() {
-        return userDAO == null ? userDAO = new UserDAOImpl() : userDAO;
+        return Objects.isNull(userDAO) ? userDAO = new UserDAOImpl() : userDAO;
     }
 
     /**
@@ -61,6 +62,7 @@ public class UserDAOImpl implements UserDAO {
             final int userId = resultSet.getInt(1) ;
 
             user.setId(userId);
+            DBConnection.getConnection().commit();
 
             return true;
         } catch (final SQLException exception) {

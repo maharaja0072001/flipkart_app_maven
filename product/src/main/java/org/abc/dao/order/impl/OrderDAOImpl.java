@@ -19,6 +19,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * <p>
@@ -47,7 +48,7 @@ public class OrderDAOImpl implements OrderDAO {
      * @return returns the single instance of OrderDAOImpl Class.
      */
     public static OrderDAO getInstance() {
-        return orderDAO == null ? orderDAO = new OrderDAOImpl() : orderDAO;
+        return Objects.isNull(orderDAO) ? orderDAO = new OrderDAOImpl() : orderDAO;
     }
 
     /**
@@ -142,7 +143,7 @@ public class OrderDAOImpl implements OrderDAO {
                 final int orderId = resultSet.getInt(1);
                 final int productId = resultSet.getInt(2);
                 String productName = null;
-                final PaymentMode paymentMode = PaymentMode.valueOf(resultSet.getString(3));
+                final PaymentMode paymentMode = PaymentMode.valueOf(resultSet.getInt(3));
                 final int quantity = resultSet.getInt(4);
                 final float totalAmount = resultSet.getFloat(5);
                 final String address = resultSet.getString(6);

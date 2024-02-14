@@ -1,10 +1,13 @@
 package org.abc.launcher;
 
 import org.abc.authentication.view.AuthenticationView;
+import org.abc.dbconnection.DBConnection;
 import org.abc.view.homepage.HomepageView;
 
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+
+import java.sql.SQLException;
 
 /**
  * <p>
@@ -28,6 +31,11 @@ public class Launcher {
     public static void main(final String[] arguments) {
         LOGGER.info("Flipkart application started");
         final AuthenticationView authenticationView = AuthenticationView.getInstance();
+        try {
+            DBConnection.getConnection();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
 
         authenticationView.setHomePageView(HomepageView.getInstance());
         authenticationView.showAuthenticationPage();

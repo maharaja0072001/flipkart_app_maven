@@ -77,7 +77,7 @@ public class Order {
 
     @Override
     public String toString() {
-        return String.format("Order id : %d\n%s\nproduct quantity : %d\ntotal amount : %.2f\nPayment mode : %s\nShipping address : %s\nStatus : %s",
+        return String.format("Order id : %d\n%s\nQuantity : %d\nTotal amount : %.2f\nPayment mode : %s\nShipping address : %s\nStatus : %s",
                 id, productName, quantity, totalAmount, paymentMode, address, orderStatus.toString());
     }
 

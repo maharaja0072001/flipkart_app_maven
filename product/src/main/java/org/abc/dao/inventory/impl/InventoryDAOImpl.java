@@ -16,6 +16,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * <p>
@@ -44,7 +45,7 @@ public class InventoryDAOImpl implements InventoryDAO {
      * @return returns the single instance of InventoryController Class.
      */
     public static InventoryDAO getInstance() {
-        return inventoryDAO == null ? inventoryDAO = new InventoryDAOImpl() : inventoryDAO;
+        return Objects.isNull(inventoryDAO) ? inventoryDAO = new InventoryDAOImpl() : inventoryDAO;
     }
 
     /**
@@ -71,33 +72,24 @@ public class InventoryDAOImpl implements InventoryDAO {
             } catch (SQLException exception) {
                 throw new ItemAdditionFailedException(exception.getMessage());
             }
-            String query = null ;
-
-            switch (product.getProductCategory()) {
-                case MOBILE:
-                case LAPTOP:
-                    query = "insert into electronics_inventory(product_id, brand, model) values(?, ?, ?)" ;
-                    break;
-                case CLOTHES:
-                    query = "insert into clothes_inventory(product_id, brand, clothes_type, gender, size) values(?, ?, ?, ?, ?)";
-                    break;
-            }
+            String query = switch (product.getProductCategory()) {
+                case MOBILE, LAPTOP -> "insert into electronics_inventory(product_id, brand, model) values(?, ?, ?)";
+                case CLOTHES ->
+                        "insert into clothes_inventory(product_id, brand, clothes_type, gender, size) values(?, ?, ?, ?, ?)";
+            };
 
             try (final PreparedStatement preparedStatement = DBConnection.getConnection().prepareStatement(query)) {
                 preparedStatement.setInt(1, productId);
                 preparedStatement.setString(2, product.getBrandName());
 
                 switch (product.getProductCategory()) {
-                    case MOBILE:
-                        preparedStatement.setString(3, ((Mobile) product).getModel());
-                        break;
-                    case LAPTOP:
-                        preparedStatement.setString(3, ((Laptop) product).getModel());
-                        break;
-                    case CLOTHES:
+                    case MOBILE -> preparedStatement.setString(3, ((Mobile) product).getModel());
+                    case LAPTOP -> preparedStatement.setString(3, ((Laptop) product).getModel());
+                    case CLOTHES -> {
                         preparedStatement.setString(3, ((Clothes) product).getClothesType());
                         preparedStatement.setString(4, ((Clothes) product).getGender());
                         preparedStatement.setString(5, ((Clothes) product).getSize());
+                    }
                 }
                 preparedStatement.executeUpdate();
                 DBConnection.getConnection().commit();
@@ -137,16 +129,12 @@ public class InventoryDAOImpl implements InventoryDAO {
      */
     @Override
     public List<Product> getItemsByCategory(final ProductCategory productCategory) {
-        switch (productCategory) {
-            case MOBILE:
-                return getMobileItems();
-            case LAPTOP:
-                return getLaptopItems();
-            case CLOTHES:
-                return getClothesItems();
-        }
+        return switch (productCategory) {
+            case MOBILE -> getMobileItems();
+            case LAPTOP -> getLaptopItems();
+            case CLOTHES -> getClothesItems();
+        };
 
-        return null;
     }
 
     /**
@@ -159,7 +147,8 @@ public class InventoryDAOImpl implements InventoryDAO {
     private List<Product> getMobileItems() {
         final List<Product> mobileCollection = new ArrayList<>();
 
-        try (final PreparedStatement preparedStatement = DBConnection.getConnection().prepareStatement("select p.id, e.brand, e.model, p.price,p.quantity from electronics_inventory e join product p on p.id = e.product_id where p.product_category='MOBILE'")) {
+        try (final PreparedStatement preparedStatement = DBConnection.getConnection().prepareStatement("select p.id, e.brand, e.model, p.price,p.quantity from electronics_inventory e join product p on p.id = e.product_id where p.product_category_id=?")) {
+            preparedStatement.setInt(1, ProductCategory.MOBILE.getId());
             final ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
@@ -190,7 +179,8 @@ public class InventoryDAOImpl implements InventoryDAO {
     private List<Product> getLaptopItems() {
         final List<Product> laptopCollection = new ArrayList<>();
 
-        try (final PreparedStatement preparedStatement = DBConnection.getConnection().prepareStatement("select p.id, e.brand, e.model, p.price,p.quantity  from electronics_inventory e join product p on p.id = e.product_id where p.product_category='LAPTOP'")) {
+        try (final PreparedStatement preparedStatement = DBConnection.getConnection().prepareStatement("select p.id, e.brand, e.model, p.price,p.quantity  from electronics_inventory e join product p on p.id = e.product_id where p.product_category_id=?")) {
+            preparedStatement.setInt(1, ProductCategory.LAPTOP.getId());
             final ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
@@ -221,7 +211,8 @@ public class InventoryDAOImpl implements InventoryDAO {
     private List<Product> getClothesItems() {
         final List<Product> clothesCollection = new ArrayList<>();
 
-        try (final PreparedStatement preparedStatement = DBConnection.getConnection().prepareStatement("select p.id, c.clothes_type ,c.brand, c.gender, c.size, p.price,p.quantity  from clothes_inventory c join product p on p.id = c.product_id where p.product_category = 'CLOTHES'")) {
+        try (final PreparedStatement preparedStatement = DBConnection.getConnection().prepareStatement("select p.id, c.clothes_type ,c.brand, c.gender, c.size, p.price,p.quantity  from clothes_inventory c join product p on p.id = c.product_id where p.product_category_id =?")) {
+            preparedStatement.setInt(1, ProductCategory.CLOTHES.getId());
             final ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {

@@ -6,6 +6,7 @@ import org.abc.service.order.impl2.OrderServiceImpl;
 import org.abc.service.order.OrderService;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * <p>
@@ -35,7 +36,7 @@ public class OrderController {
      * @return the single instance of OrderController class.
      */
     public static OrderController getInstance() {
-        return orderController == null ? orderController = new OrderController() : orderController;
+        return Objects.isNull(orderController) ? orderController = new OrderController() : orderController;
     }
 
     /**

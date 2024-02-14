@@ -6,6 +6,7 @@ import org.abc.ProductCategory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * <p>
@@ -37,7 +38,7 @@ public class InventoryServiceImpl implements InventoryService {
      * @return the single instance of InventoryController class.
      */
     public static InventoryService getInstance() {
-        return inventoryService == null ? inventoryService = new InventoryServiceImpl() : inventoryService;
+        return Objects.isNull(inventoryService) ? inventoryService = new InventoryServiceImpl() : inventoryService;
     }
 
     /**
@@ -51,15 +52,9 @@ public class InventoryServiceImpl implements InventoryService {
     public void addItem(final List<Product> products) {
         for (final Product product : products) {
             switch (product.getProductCategory()) {
-                case MOBILE:
-                    MOBILE_INVENTORY.add(product);
-                    break;
-                case LAPTOP:
-                    LAPTOP_INVENTORY.add(product);
-                    break;
-                case CLOTHES:
-                    CLOTHES_INVENTORY.add(product);
-                    break;
+                case MOBILE -> MOBILE_INVENTORY.add(product);
+                case LAPTOP -> LAPTOP_INVENTORY.add(product);
+                case CLOTHES -> CLOTHES_INVENTORY.add(product);
             }
         }
     }
@@ -74,15 +69,9 @@ public class InventoryServiceImpl implements InventoryService {
     @Override
     public void removeItem(final Product product) {
         switch (product.getProductCategory()) {
-            case MOBILE:
-                MOBILE_INVENTORY.remove(product);
-                break;
-            case LAPTOP:
-                LAPTOP_INVENTORY.remove(product);
-                break;
-            case CLOTHES:
-                CLOTHES_INVENTORY.remove(product);
-                break;
+            case MOBILE -> MOBILE_INVENTORY.remove(product);
+            case LAPTOP -> LAPTOP_INVENTORY.remove(product);
+            case CLOTHES -> CLOTHES_INVENTORY.remove(product);
         }
     }
 
@@ -95,15 +84,11 @@ public class InventoryServiceImpl implements InventoryService {
      */
     @Override
     public List<Product> getItemsByCategory(final ProductCategory productCategory) {
-        switch (productCategory) {
-            case MOBILE:
-                return MOBILE_INVENTORY;
-            case LAPTOP:
-                return LAPTOP_INVENTORY;
-            case CLOTHES:
-                return CLOTHES_INVENTORY;
-        }
+        return switch (productCategory) {
+            case MOBILE -> MOBILE_INVENTORY;
+            case LAPTOP -> LAPTOP_INVENTORY;
+            case CLOTHES -> CLOTHES_INVENTORY;
+        };
 
-        return null;
     }
 }

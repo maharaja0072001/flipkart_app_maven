@@ -1,9 +1,12 @@
-package org.abc.view.homepage.filter;
+package org.abc.view.homepage.filter.impl;
 
 import org.abc.model.product.Product;
+import org.abc.view.homepage.filter.Filter;
 
-import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -32,7 +35,7 @@ public class RateFilter implements Filter {
      * @return the single instance of RateFilter class.
      */
     public static RateFilter getInstance() {
-        return rateFilter == null ? rateFilter = new RateFilter() : rateFilter;
+        return Objects.isNull(rateFilter) ? rateFilter = new RateFilter() : rateFilter;
     }
 
     /**
@@ -44,11 +47,7 @@ public class RateFilter implements Filter {
      * @return the items filtered by price high to low.
      */
     public List<Product> sortHighToLow(final List<Product> products) {
-        final ArrayList<Product> filteredItems = new ArrayList<>(products);
-
-        filteredItems.sort(new RateComparator(true));
-
-        return filteredItems;
+        return products.stream().sorted(Comparator.comparing(Product::getPrice, Comparator.reverseOrder())).collect(Collectors.toList());
     }
 
     /**
@@ -60,11 +59,7 @@ public class RateFilter implements Filter {
      * @return all the products filtered by price from low to high.
      */
     public List<Product> sortLowToHigh(final List<Product> products) {
-        final ArrayList<Product> filteredItems = new ArrayList<>(products);
-
-        filteredItems.sort(new RateComparator(false));
-
-        return filteredItems;
+        return products.stream().sorted(Comparator.comparing(Product::getPrice)).collect(Collectors.toList());
     }
 
     /**
@@ -75,15 +70,6 @@ public class RateFilter implements Filter {
      * @return the filtered items of given price range.
      */
     public List<Product> sortByRange(final List<Product> products, final int minimumAmount, final int maximumAmount) {
-        final ArrayList<Product> filteredItems = new ArrayList<>();
-
-        for (final Product product : products) {
-            if ((product.getPrice() >= minimumAmount)
-                    && (product.getPrice() <= maximumAmount)) {
-                filteredItems.add(product);
-            }
-        }
-
-        return filteredItems;
+        return products.stream().filter(product -> product.getPrice() >= minimumAmount && product.getPrice() <= maximumAmount).collect(Collectors.toList());
     }
 }

@@ -1,5 +1,6 @@
 package org.abc.singleton_scanner;
 
+import java.util.Objects;
 import java.util.Scanner;
 
 /**
@@ -29,6 +30,6 @@ public class SingletonScanner {
      * @return the single instance of Scanner class.
      */
     public static Scanner getScanner() {
-        return scanner == null ? scanner = new Scanner(System.in) : scanner;
+        return Objects.isNull(scanner) ? scanner = new Scanner(System.in) : scanner;
     }
 }

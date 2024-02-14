@@ -6,7 +6,7 @@ import org.abc.singleton_scanner.SingletonScanner;
 import org.abc.model.product.Product;
 import org.abc.validation.Validator;
 import org.abc.view.homepage.filter.Filter;
-import org.abc.view.homepage.filter.RateFilter;
+import org.abc.view.homepage.filter.impl.RateFilter;
 import org.abc.view.wishlist.WishlistView;
 import org.abc.view.cart.CartView;
 import org.abc.view.common_view.View;
@@ -15,6 +15,7 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Scanner;
 
 /**
@@ -48,7 +49,7 @@ public class FilterMenuView extends View {
      * @return the single instance of FilterMenuView class.
      */
     public static FilterMenuView getInstance() {
-        return filterMenuView == null ? filterMenuView = new FilterMenuView() : filterMenuView;
+        return Objects.isNull(filterMenuView) ? filterMenuView = new FilterMenuView() : filterMenuView;
     }
 
     /**
@@ -68,19 +69,13 @@ public class FilterMenuView extends View {
         }
 
         switch (choice) {
-            case 1:
-                filterByLowToHigh(user, products);
-                break;
-            case 2:
-                filterByHighToLow(user, products);
-                break;
-            case 3:
-                filterByRange(user, products);
-                break;
-            default:
+            case 1 -> filterByLowToHigh(user, products);
+            case 2 -> filterByHighToLow(user, products);
+            case 3 -> filterByRange(user, products);
+            default -> {
                 LOGGER.warn("Enter a valid choice ");
                 showFilterMenu(user, products);
-                break;
+            }
         }
     }
 
@@ -138,7 +133,7 @@ public class FilterMenuView extends View {
         } else {
             final List<Product> itemsFilteredByPrice = RATE_FILTER.sortByRange(products, Integer.parseInt(minimumAmount), Integer.parseInt(maximumAmount));
 
-            if (null == itemsFilteredByPrice) {
+            if (Objects.isNull(itemsFilteredByPrice)) {
                 LOGGER.warn("No products found");
                 showFilterMenu(user, products);
             } else {

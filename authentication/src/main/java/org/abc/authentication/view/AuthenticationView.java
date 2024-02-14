@@ -6,6 +6,7 @@ import org.abc.pageview.PageViewer;
 import org.abc.singleton_scanner.SingletonScanner;
 import org.abc.validation.Validator;
 
+import java.util.Objects;
 import java.util.Scanner;
 
 import org.apache.logging.log4j.Logger;
@@ -43,7 +44,7 @@ public class AuthenticationView {
      * @return the single instance of AuthenticationView class.
      */
     public static AuthenticationView getInstance() {
-        return authenticationView == null ? authenticationView = new AuthenticationView() : authenticationView;
+        return Objects.isNull(authenticationView) ? authenticationView = new AuthenticationView() : authenticationView;
     }
 
     /**
@@ -129,15 +130,12 @@ public class AuthenticationView {
         toGoBack(choice);
 
         switch (choice) {
-            case 1:
-                emailIdOrMobileNumber = getMobileNumber();
-                break;
-            case 2:
-                emailIdOrMobileNumber = getEmailId();
-                break;
-            default:
+            case 1 -> emailIdOrMobileNumber = getMobileNumber();
+            case 2 -> emailIdOrMobileNumber = getEmailId();
+            default -> {
                 LOGGER.warn("Enter a valid choice");
                 login();
+            }
         }
         LOGGER.info("Enter the Password :");
         final String password = SCANNER.nextLine();

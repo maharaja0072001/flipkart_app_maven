@@ -20,8 +20,7 @@
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>42.7.0</version>
-            <scope>system</scope>
-            <systemPath>${pom.basedir}/libs/org/postgresql/postgresql-42.7.0.jar</systemPath>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>

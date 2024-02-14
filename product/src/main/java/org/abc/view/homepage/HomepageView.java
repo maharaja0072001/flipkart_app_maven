@@ -18,6 +18,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * <p>
@@ -57,7 +58,7 @@ public class HomepageView extends View implements PageViewer {
      * @return the single instance of HomepageView class.
      */
     public static HomepageView getInstance() {
-        return homePageView == null ? homePageView = new HomepageView() : homePageView;
+        return Objects.isNull(homePageView) ? homePageView = new HomepageView() : homePageView;
     }
 
     /**
@@ -71,36 +72,27 @@ public class HomepageView extends View implements PageViewer {
         LOGGER.info("1.Mobiles\n2.Laptops\n3.Clothes\n4.Cart\n5.Wishlist\n6.My Orders\n7.Profile\n8.Logout");
 
         switch (getChoice()) {
-            case 1:
+            case 1 -> {
                 showItems(MOBILES);
                 toAddItemOrShowFilterMenu(user, MOBILES);
-                break;
-            case 2:
+            }
+            case 2 -> {
                 showItems(LAPTOPS);
                 toAddItemOrShowFilterMenu(user, LAPTOPS);
-                break;
-            case 3:
+            }
+            case 3 -> {
                 showItems(CLOTHES);
                 toAddItemOrShowFilterMenu(user, CLOTHES);
-                break;
-            case 4:
-                CartView.getInstance().viewCart(user);
-                break;
-            case 5:
-                WishlistView.getInstance().viewWishlist(user);
-                break;
-            case 6:
-                OrderView.getInstance().viewAndCancelOrder(user);
-                break;
-            case 7:
-                AUTHENTICATION_VIEW.viewAndEditProfile(user);
-                break;
-            case 8:
+            }
+            case 4 -> CartView.getInstance().viewCart(user);
+            case 5 -> WishlistView.getInstance().viewWishlist(user);
+            case 6 -> OrderView.getInstance().viewAndCancelOrder(user);
+            case 7 -> AUTHENTICATION_VIEW.viewAndEditProfile(user);
+            case 8 -> {
                 LOGGER.info("Logged out successfully");
                 AUTHENTICATION_VIEW.showAuthenticationPage();
-                break;
-            default:
-                LOGGER.warn("Enter a valid choice");
+            }
+            default -> LOGGER.warn("Enter a valid choice");
         }
         showHomePage(user);
     }
@@ -161,20 +153,20 @@ public class HomepageView extends View implements PageViewer {
             showHomePage(user);
         } else {
             switch (choice) {
-                case 1:
+                case 1 -> {
                     if (!CartView.getInstance().addItem(product, user)) {
                         toAddItemOrShowFilterMenu(user, products);
                     }
-                    break;
-                case 2:
+                }
+                case 2 -> {
                     if (!WishlistView.getInstance().addItem(product, user)) {
                         toAddItemOrShowFilterMenu(user, products);
                     }
-                    break;
-                default:
+                }
+                default -> {
                     LOGGER.warn("Invalid choice");
                     addItemToCartOrWishlist(product, user, products);
-                    break;
+                }
             }
         }
     }

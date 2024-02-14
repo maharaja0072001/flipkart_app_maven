@@ -7,6 +7,7 @@ import org.abc.model.product.Product;
 import org.abc.service.inventory.InventoryService;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * <p>
@@ -36,7 +37,7 @@ public class InventoryServiceImpl implements InventoryService {
      * @return the single instance of InventoryController class.
      */
     public static InventoryService getInstance() {
-        return inventoryService == null ? inventoryService = new InventoryServiceImpl() : inventoryService;
+        return Objects.isNull(inventoryService) ? inventoryService = new InventoryServiceImpl() : inventoryService;
     }
 
     /**

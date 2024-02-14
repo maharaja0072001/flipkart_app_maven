@@ -7,6 +7,8 @@ import org.abc.model.wishlist.Wishlist;
 import org.abc.model.product.Product;
 import org.abc.service.wishlist.WishlistService;
 
+import java.util.Objects;
+
 /**
  * <p>
  * Provides the service for the Wishlist.
@@ -35,7 +37,7 @@ public class WishlistServiceImpl implements WishlistService {
      * @return returns the single instance of WishlistServiceImpl Class.
      */
     public static WishlistService getInstance() {
-        return wishlistService == null ? wishlistService = new WishlistServiceImpl() : wishlistService;
+        return Objects.isNull(wishlistService) ? wishlistService = new WishlistServiceImpl() : wishlistService;
     }
 
     /**

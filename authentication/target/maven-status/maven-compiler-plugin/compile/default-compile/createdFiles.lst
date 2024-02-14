@@ -1,0 +1,10 @@
+org\abc\authentication\exceptions\UserNotFoundException.class
+org\abc\authentication\view\AuthenticationView.class
+org\abc\authentication\service\impl\UserServiceImpl.class
+org\abc\authentication\controller\UserController.class
+org\abc\authentication\dao\impl\UserDAOImpl.class
+org\abc\authentication\model\User.class
+org\abc\authentication\dao\UserDAO.class
+org\abc\authentication\exceptions\UpdateActionFailedException.class
+org\abc\authentication\service\impl2\UserServiceImpl.class
+org\abc\authentication\service\UserService.class

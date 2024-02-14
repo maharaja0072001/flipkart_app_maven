@@ -6,6 +6,7 @@ import org.abc.service.inventory.impl2.InventoryServiceImpl;
 import org.abc.service.inventory.InventoryService;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * <p>
@@ -35,7 +36,7 @@ public class InventoryController {
      * @return the single instance of InventoryController class.
      */
     public static InventoryController getInstance() {
-        return inventoryController == null ? inventoryController = new InventoryController() : inventoryController;
+        return Objects.isNull(inventoryController) ? inventoryController = new InventoryController() : inventoryController;
     }
 
     /**

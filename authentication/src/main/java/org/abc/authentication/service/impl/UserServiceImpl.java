@@ -6,6 +6,7 @@ import org.abc.validation.Validator;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * <p>
@@ -35,7 +36,7 @@ public class UserServiceImpl implements UserService {
      * @return returns the single instance of UserServiceImpl Class.
      */
     public static UserService getInstance() {
-        return userService == null ? userService = new UserServiceImpl() : userService;
+        return Objects.isNull(userService) ? userService = new UserServiceImpl() : userService;
     }
 
     /**
@@ -71,11 +72,7 @@ public class UserServiceImpl implements UserService {
         User user = null;
 
         if (Validator.getInstance().isValidEmail(emailIdOrMobileNumber)) {
-            for (final User existingUser : USERS.values()) {
-                if (existingUser.getEmailId().equals(emailIdOrMobileNumber)) {
-                    user = existingUser;
-                }
-            }
+            user = USERS.values().stream().filter(existingUser -> existingUser.getEmailId().equals(emailIdOrMobileNumber)).findFirst().orElse(null);
         } else {
             user = USERS.get(emailIdOrMobileNumber);
         }

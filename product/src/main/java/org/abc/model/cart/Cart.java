@@ -4,6 +4,7 @@ import org.abc.model.product.Product;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * <p>
@@ -27,7 +28,7 @@ public class Cart {
      * @return true if the product is added.
      */
     public boolean addItem(final Product product) {
-        cartItems = (null == cartItems) ? new LinkedList<>() : cartItems;
+        cartItems = Objects.isNull(cartItems) ? new LinkedList<>() : cartItems;
 
         if (!cartItems.contains(product)) {
             totalAmountInCart += product.getPrice();

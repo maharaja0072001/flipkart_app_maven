@@ -6,6 +6,8 @@ import org.abc.model.product.Product;
 import org.abc.service.wishlist.impl2.WishlistServiceImpl;
 import org.abc.service.wishlist.WishlistService;
 
+import java.util.Objects;
+
 /**
  * <p>
  * Handles requests and responses from WishlistView clas and WishlistService class.
@@ -34,7 +36,7 @@ public class WishlistController {
      * @return returns the single instance of WishlistController Class.
      */
     public static WishlistController getInstance() {
-        return wishlistController == null ? wishlistController = new WishlistController() : wishlistController;
+        return Objects.isNull(wishlistController) ? wishlistController = new WishlistController() : wishlistController;
     }
 
     /**

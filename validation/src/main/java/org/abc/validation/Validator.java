@@ -1,5 +1,6 @@
 package org.abc.validation;
 
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 /**
@@ -29,7 +30,7 @@ public class Validator {
      * @return the single instance of UserDataValidator class.
      */
     public static Validator getInstance() {
-        return validator == null ? validator = new Validator() : validator;
+        return Objects.isNull(validator) ? validator = new Validator() : validator;
     }
 
     /**
@@ -145,6 +146,6 @@ public class Validator {
      * @return true if the input grants access to proceed.
      */
     public boolean isPositiveNumber(final String input) {
-        return Pattern.matches("^[1-9]+$", input);
+        return Pattern.matches("^[1-9]\\d*$", input);
     }
 }

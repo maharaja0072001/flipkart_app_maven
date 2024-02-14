@@ -16,6 +16,7 @@ import org.abc.ProductCategory;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Objects;
 
 /**
  * <p>
@@ -44,7 +45,7 @@ public class CartDAOImpl implements CartDAO {
      * @return returns the single instance of CartDAOImpl Class.
      */
     public static CartDAO getInstance() {
-        return cartDAO == null ? cartDAO = new CartDAOImpl() : cartDAO;
+        return Objects.isNull(cartDAO) ? cartDAO = new CartDAOImpl() : cartDAO;
     }
 
     /**
@@ -67,7 +68,7 @@ public class CartDAOImpl implements CartDAO {
 
             return  updatedRows > 0;
         } catch (final SQLException exception) {
-            throw new ItemAdditionFailedException(exception.getMessage());
+            return false;
         }
     }
 
@@ -104,15 +105,15 @@ public class CartDAOImpl implements CartDAO {
     public Cart getCart(final User user) {
         final Cart cart = new Cart();
 
-        try (final PreparedStatement preparedStatement = DBConnection.getConnection().prepareStatement("select cart.product_id, p.product_category, e.brand,e.model, p.price,c.clothes_type,c.size,c.gender, c.brand, p.quantity from cart join product p on cart.product_id=p.id  left join electronics_inventory e on cart.product_id = e.product_id left join clothes_inventory c on p.id=c.product_id where cart.user_id = ?")) {
+        try (final PreparedStatement preparedStatement = DBConnection.getConnection().prepareStatement("select cart.product_id, p.product_category_id, e.brand,e.model, p.price,c.clothes_type,c.size,c.gender, c.brand, p.quantity from cart join product p on cart.product_id=p.id  left join electronics_inventory e on cart.product_id = e.product_id left join clothes_inventory c on p.id=c.product_id where cart.user_id = ?")) {
             preparedStatement.setInt(1, user.getId());
             final ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
                 final int productId = resultSet.getInt(1);
-                final String productType = resultSet.getString(2);
+                final ProductCategory productCategory = ProductCategory.valueOf(resultSet.getInt(2));
 
-                if (ProductCategory.MOBILE == ProductCategory.valueOf(productType.toUpperCase())) {
+                if (ProductCategory.MOBILE == productCategory) {
                     final String brand = resultSet.getString(3);
                     final String model = resultSet.getString(4);
                     final float price = resultSet.getFloat(5);
@@ -123,7 +124,7 @@ public class CartDAOImpl implements CartDAO {
                     cart.addItem(mobile);
                 }
 
-                if (ProductCategory.LAPTOP == ProductCategory.valueOf(productType.toUpperCase())) {
+                if (ProductCategory.LAPTOP == productCategory) {
                     final String brand = resultSet.getString(3);
                     final String model = resultSet.getString(4);
                     final float price = resultSet.getFloat(5);
@@ -134,7 +135,7 @@ public class CartDAOImpl implements CartDAO {
                     cart.addItem(laptop);
                 }
 
-                if (ProductCategory.CLOTHES == ProductCategory.valueOf(productType.toUpperCase())) {
+                if (ProductCategory.CLOTHES == productCategory) {
                     final String brand = resultSet.getString(9);
                     final String clothesType = resultSet.getString(6);
                     final String size = resultSet.getString(7);
